@@ -66,3 +66,34 @@ function createFeatures(earthquakeData) {
 
   createMap(earthquakesLayer);
 }
+
+// createMap() takes the earthquake data and incorporates it into the visualization:
+function createMap(earthquakesLayer) {
+    // Create the base layers.
+    let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    })
+  
+    // Create baseMaps object.
+    let baseMaps = {
+      "World Map": street
+    };
+  
+    // Create overlays object.
+    let overlayMaps ={
+      "Earthquakes" : earthquakesLayer
+    }
+  
+    // Create new map.
+    let myMap = L.map("map", {
+      center: [
+        -26.23, 135.39
+      ],
+      zoom: 3,
+      layers: [street,earthquakesLayer]
+    });
+  
+    // Create a layer control that contains our baseMaps.
+    L.control.layers(baseMaps, overlayMaps, {
+      collapsed: false
+    }).addTo(myMap);
