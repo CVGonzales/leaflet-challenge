@@ -35,3 +35,34 @@ function markerColor(depth){
   }
 }
 
+// Create earthquakes layer and popup and pass to createMap() function
+var min=0;
+var max=0;
+function createFeatures(earthquakeData) {
+
+  function addPopup(feature, layer) {
+    layer.bindPopup(`<h2>Magnitude: ${feature.properties.mag}<br>Depth: ${feature.geometry.coordinates[2]} km<br><h3>${feature.properties.place}</h3><hr><p>${new Date(feature.properties.time)}</p>`);
+    
+    if ( min > feature.geometry.coordinates[2] ) {
+      min = feature.geometry.coordinates[2];
+    }
+    if ( max < feature.geometry.coordinates[2] ) {
+      max = feature.geometry.coordinates[2];
+    }
+  }
+
+  let earthquakesLayer = L.geoJSON(earthquakeData, {
+    onEachFeature: addPopup,
+    pointToLayer(feature,latlng) {
+      return L.circleMarker(latlng, {
+        radius: markerSize(feature.properties.mag),
+        color: markerColor(feature.geometry.coordinates[2]),
+        weight: 1,
+        opacity: 1,
+        fillopacity: 0.6
+      });
+    }
+  });
+
+  createMap(earthquakesLayer);
+}
