@@ -97,3 +97,32 @@ function createMap(earthquakesLayer) {
     L.control.layers(baseMaps, overlayMaps, {
       collapsed: false
     }).addTo(myMap);
+
+  // Adding the legend to the map
+  var legend = L.control({ position: 'bottomright' });
+  legend.onAdd = function (myMap) {
+    var div = L.DomUtil.create('div', 'info legend');
+    var labels = [];
+
+    div.innerHTML = `<div class="labels"><h4>Earthquake Depth</h4></div>`;
+
+    var lastsig;
+    sigs.forEach(function (sig, index) {
+      if ( index == 0 ) 
+        labels.push(`<i style="background: ${colours[index]}"></i> ${min} - ${sig} km<br clear="all">`);
+      else 
+        labels.push(`<i style="background: ${colours[index]}"></i> ${lastsig} - ${sig} km<br clear="all">`);
+      
+      if ( index+1 == sigs.length) {
+        labels.push(`<i style="background: ${colours[index+1]}"></i> ${sig} - ${max} km<br clear="all">`);
+      }
+      lastsig=sig;
+
+    }); 
+
+    div.innerHTML += `<div class="info legend"> ${labels.join('')} </div>`;
+
+    return div;
+  };
+  legend.addTo(myMap);
+}
